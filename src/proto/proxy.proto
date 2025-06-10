@@ -1,0 +1,14 @@
+syntax = "proto3";
+package proxySng;
+
+service proxySng{
+    rpc getUserExportData(GetUserExportDataRequest) returns (GetUserExportDataResponse){}
+}
+
+
+message GetUserExportDataRequest {}
+
+message GetUserExportDataResponse {
+    bool success = 1;
+    string data = 2;
+}
