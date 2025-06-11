@@ -4,8 +4,8 @@ import { join } from 'path';
 export const grpcClientOptions: ClientOptions = {
   transport: Transport.GRPC,
   options: {
-    package: 'proxySng',
+    package: 'employee',
     protoPath: join(process.cwd(), 'src/proto/proxy.proto'),
-    url: 'localhost:5000',
+    url: 'localhost:4500',
   },
 };
