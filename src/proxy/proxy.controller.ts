@@ -4,6 +4,7 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -13,11 +14,10 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
-import { ApiKeyGuard } from 'src/guards/api-key.guard';
-import { ZodValidationService } from 'src/validators/validator';
-import { GrpcClientService } from 'src/grpc/grpc-client.service';
-import { GetUserExportDataResponseSchema } from 'src/schemas/proxy.schemas';
+import { ApiKeyGuard } from '../guards/api-key.guard';
+import { ZodValidationService } from '../validators/validator';
+import { ProxyService } from './proxy.service';
+import { GetUserExportDataResponseSchema } from '../schemas/proxy.schemas';
 import { ProxyResponseDto } from './dto/proxy.dto';
 
 @ApiTags('proxy')
@@ -27,7 +27,7 @@ import { ProxyResponseDto } from './dto/proxy.dto';
 export class ProxyController {
   constructor(
     private readonly zodValidationService: ZodValidationService,
-    private readonly grpcClientService: GrpcClientService,
+    private readonly proxyService: ProxyService,
   ) {}
 
   @Get('user-export-data')
@@ -49,16 +49,14 @@ export class ProxyController {
     status: 500,
     description: 'Internal Server Error - gRPC service unavailable',
   })
-  getUserExportData(): Observable<any> {
-    
-    return this.grpcClientService.getUserExportData().pipe(
+  getUserExportData(): Observable<ProxyResponseDto> {
+    return this.proxyService.getUserExportData().pipe(
       map((grpcResponse) => {
-        // Validate the gRPC response using Zod
         const validatedResponse = this.zodValidationService.validate(
           GetUserExportDataResponseSchema,
           grpcResponse,
         );
-    
+
         return {
           success: true,
           message: 'User export data retrieved successfully',
@@ -67,13 +65,13 @@ export class ProxyController {
         };
       }),
       catchError((error) => {
-        console.error('Proxy Error:', error);
-    
+        this.logger.error('Proxy Error:', error);
+
         throw new HttpException(
           {
             success: false,
             message: 'Failed to retrieve user export data',
-            error: 'gRPC service unavailable',
+            error: error.message || 'gRPC service unavailable',
             timestamp: new Date().toISOString(),
           },
           HttpStatus.INTERNAL_SERVER_ERROR,
@@ -81,4 +79,6 @@ export class ProxyController {
       }),
     );
   }
+
+  private readonly logger = new Logger(ProxyController.name);
 }
