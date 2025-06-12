@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  proxy-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - ${PORT:-3000}:3000
+    env_file:
+      - .env
+    restart: unless-stopped

@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  proxy-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    ports:
+      - ${PORT:-3000}:3000
+    env_file:
+      - .env
+    restart: unless-stopped
+    command: ['npm', 'run', 'start:dev']
+    # command: ['tail', '-f', '/dev/null']

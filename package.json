@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "generate:proto": "npx protoc --ts_proto_out=./src/proto/generated --ts_proto_opt=outputServices=grpc-js --proto_path=./src/proto ./src/proto/proxy.proto"
+    "build:proto": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/proto/generated/ src/proto/*.proto"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.0",
