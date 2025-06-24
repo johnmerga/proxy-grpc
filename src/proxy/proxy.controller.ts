@@ -56,11 +56,12 @@ export class ProxyController {
           GetUserExportDataResponseSchema,
           grpcResponse,
         );
+        const parsedData = JSON.parse(validatedResponse.data);
 
         return {
           success: true,
           message: 'User export data retrieved successfully',
-          data: validatedResponse,
+          data: parsedData,
           timestamp: new Date().toISOString(),
         };
       }),
