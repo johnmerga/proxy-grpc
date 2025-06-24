@@ -22,7 +22,7 @@ import { ProxyResponseDto } from './dto/proxy.dto';
 
 @ApiTags('proxy')
 @Controller('proxy')
-@UseGuards(ApiKeyGuard)
+// @UseGuards(ApiKeyGuard)
 @ApiSecurity('api-key')
 export class ProxyController {
   constructor(

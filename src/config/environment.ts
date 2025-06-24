@@ -35,7 +35,7 @@ export const env = cleanEnv(process.env, {
 
   // Server
   PORT: port({ default: 3000, desc: 'Port for the HTTP server' }),
-  HOST: host({ devDefault: 'localhost', desc: 'Host for the HTTP server' }),
+  HOST: host({ devDefault: '0.0.0.0', desc: 'Host for the HTTP server' }),
 
   // gRPC Configuration
   GRPC_HOST: host({ devDefault: 'localhost', desc: 'gRPC server host' }),
@@ -43,4 +43,3 @@ export const env = cleanEnv(process.env, {
 });
 
 export const apiKeys = env.API_KEYS.split(',').map((key) => key.trim());
-
